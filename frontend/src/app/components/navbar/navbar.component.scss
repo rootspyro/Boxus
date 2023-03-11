@@ -1,0 +1,12 @@
+a {
+  &.icon {
+    background-color: #e1e1e1;
+    border-radius   : 100%;
+    cursor          : pointer;
+    margin          : 0 .5rem;
+  }
+
+  img {
+    width: 2rem;
+  }
+}
