@@ -5,12 +5,9 @@
 /tmp
 /out-tsc
 /bazel-out
- 
-# Angular
-.angular/
 
 # Node
-node_modules
+/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -43,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Local Netlify folder
+.netlify
