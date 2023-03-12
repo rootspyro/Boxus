@@ -1,6 +1,9 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { environment } from 'src/app/environments/environment';
+import { Secret } from 'src/app/interfaces/secret';
+import { MySecretsService } from 'src/app/services/my-secrets.service';
+import { SupabaseService } from 'src/app/supabase.service';
 
 @Component({
   selector: 'app-new-secret',
@@ -12,14 +15,18 @@ export class NewSecretComponent {
   dragAreaClass!: string;
   draggedFiles!: any;
   secretForm!: FormGroup;
+  private user_id: string | undefined;
 
   constructor(
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private mySecretsSvc: MySecretsService,
+    private supabaseSvc: SupabaseService
   ) {}
 
   ngOnInit(): void {
     this.dragAreaClass = 'dragarea';
     this.secretForm = this.initForm();
+    this.user_id = this.supabaseSvc.session?.user.id;
   }
 
   @HostListener('dragover', ['$event']) onDragOver(event: any) {
@@ -58,10 +65,11 @@ export class NewSecretComponent {
   }
 
   saveFiles(files: FileList) {
-    const regExp = '([^\\s]+(\\.(?i)(jpe?g|png|gif|bmp))$)';
-
-    if (files.length > 1) this.error = 'Sólo se permite 1 imagen';
-    else if (!regExp.match(files[0].name)) this.error = 'Sólo se permiten imágenes';
+    if (files.length > 1) {
+      this.error = 'Sólo se permite 1 imagen';
+      console.log(files);
+    } else if (!files[0].type.includes('image'))
+      this.error = 'Sólo se permiten imágenes';
     else {
       this.error = '';
       this.draggedFiles = files;
@@ -72,16 +80,26 @@ export class NewSecretComponent {
     return this.formBuilder.group({
       secretTitle: ['', [Validators.required, Validators.minLength(3)]],
       secretContent: ['', [Validators.required, Validators.minLength(3)]],
-      draggedFiles: ['']
     });
   }
 
   sendSecret(): void {
-    if(this.secretForm.valid) {
-      console.log(this.secretForm.value);
+    if (this.secretForm.valid) {
+      // this.mySecretsSvc.postSecret(this.formatSecret(this.secretForm.value));
+      console.log(this.formatSecret(this.secretForm.value));
     } else {
-      console.error('Los campos son inválidos')
+      console.error('Los campos son inválidos');
     }
+  }
 
+  private formatSecret(secret: any) {
+    const newSecret: Secret = {
+      title: secret.secretTitle,
+      content: secret.secretContent,
+      media_url: this.draggedFiles[0],
+      user_id: this.user_id,
+    };
+
+    return newSecret;
   }
 }
