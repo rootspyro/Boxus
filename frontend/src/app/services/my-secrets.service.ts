@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MySecretsService {
@@ -13,7 +14,7 @@ export class MySecretsService {
 
   getSecrets(): any {
     return this.httpClient
-      .get('https://tqoqrsdndvoemfyybxlg.functions.supabase.co/secrets')
+      .get(environment.supabaseEndpoint)
       .pipe(tap(data => this.mySecretsSubject.next(data)))
       .subscribe();
   }
