@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { SupabaseService } from 'src/app/supabase.service';
 
 @Component({
   selector: 'app-login',
@@ -8,10 +9,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 
 export class LoginComponent {
+  loading = false;
+
   loginForm = new FormGroup({
-    username: new FormControl("", [
+    email: new FormControl("", [
       Validators.required,
-      Validators.minLength(4),
+      Validators.email,
     ]),
     password: new FormControl("", [
       Validators.required,
@@ -19,4 +22,28 @@ export class LoginComponent {
       Validators.maxLength(32),
     ]),
   })
+
+  constructor(
+    private readonly supabase: SupabaseService,
+  ) {}
+
+  async onSubmit(): Promise<void> {
+    try {
+      console.log("executing");
+      this.loading = true
+      const email = this.loginForm.value.email as string
+      const password = this.loginForm.value.password as string
+      // const { error } = await this.supabase.signIn(email, password);
+      const { error } = await this.supabase.signIn(email);
+      if (error) throw error
+      alert('Check your email for the login link!')
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    } finally {
+      this.loginForm.reset()
+      this.loading = false
+    }
+  }
 }
