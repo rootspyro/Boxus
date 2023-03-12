@@ -85,11 +85,12 @@ export class SupabaseService {
     return this.supabase.storage.from('avatars').upload(filePath, file);
   }
 
-  uploadImage(file: Blob): string {
-    let imgUrl = '';
-    this.httpClient
-      .post(environment.supabaseEndpointImg, file)
-      .subscribe(res => (res = imgUrl));
+  uploadImage(file: Blob): Promise<string | void> {
+
+    const imgUrl = fetch(environment.supabaseEndpointImg, {
+      method: "POST",
+      body: file,
+    }).then((res) => res.text()).catch((err) => console.log(err));
 
     return imgUrl;
   }
