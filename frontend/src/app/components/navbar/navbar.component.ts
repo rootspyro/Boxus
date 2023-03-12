@@ -12,8 +12,14 @@ import { SupabaseService } from 'src/app/supabase.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
+  isLogged = false;
 
   constructor(private router: Router, private readonly supabase: SupabaseService) {}
+
+  ngOnInit(): void {
+    if(this.supabase.session?.user) this.isLogged = true;
+    else this.router.navigate(["/login"]);
+  }
 
   async ngLogout(): Promise<void> {
     await this.supabase.signOut();
