@@ -84,11 +84,15 @@ export class NewSecretComponent {
   }
 
   sendSecret(): void {
-    if (this.secretForm.valid) {
-      // this.mySecretsSvc.postSecret(this.formatSecret(this.secretForm.value));
-      console.log(this.formatSecret(this.secretForm.value));
-    } else {
-      console.error('Los campos son inválidos');
+    try {
+      if (this.secretForm.valid) {
+        this.mySecretsSvc.postSecret(this.formatSecret(this.secretForm.value));
+        console.log(this.formatSecret(this.secretForm.value));
+      } else {
+        console.error('Los campos son inválidos');
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 

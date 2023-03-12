@@ -22,6 +22,6 @@ export class MySecretsService {
 
   postSecret(secret: Secret): void {
     this.httpClient
-      .post(environment.supabaseEndpoint, secret)
+      .post(environment.supabaseEndpoint, secret).subscribe(res => console.log(res))
   }
 }

@@ -9,10 +9,13 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import { SupabaseService } from '../supabase.service';
 
 @Injectable()
 export class MySecretsInterceptor implements HttpInterceptor {
-  private token = `Bearer ${environment.supabaseKey}`;
+  private token = `Bearer ${this.supabaseSvc.session?.access_token}`;
+
+  constructor(private supabaseSvc: SupabaseService) {}
 
   intercept(
     request: HttpRequest<unknown>,
