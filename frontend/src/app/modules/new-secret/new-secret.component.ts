@@ -25,6 +25,7 @@ export class NewSecretComponent {
   ngOnInit(): void {
     this.dragAreaClass = 'dragarea';
     this.secretForm = this.initForm();
+    this.user_id = this.supabaseSvc.session?.user.id;
   }
 
   ngAfterViewInit(): void {
@@ -85,11 +86,11 @@ export class NewSecretComponent {
     });
   }
 
-  sendSecret() {
+  async sendSecret() {
     try {
       if (this.secretForm.valid) {
         const formatedSecret = this.formatSecret(this.secretForm.value);
-        // this.mySecretsSvc.postSecret(formatedSecret);
+        this.mySecretsSvc.postSecret(await formatedSecret);
         console.log(this.formatSecret(this.secretForm.value));
       } else {
         console.error('Los campos son inválidos');
@@ -99,14 +100,17 @@ export class NewSecretComponent {
     }
   }
 
-  private formatSecret(secret: any) {
-    const imgBlob = new Blob(this.draggedFiles, {type: this.draggedFiles[0].type});
-    const imgUrl = this.supabaseSvc.uploadImage(imgBlob);
+  private async formatSecret(secret: any) {
+    let imgUrl = null;
+    if (this.draggedFiles) {
+      const imgBlob = new Blob(this.draggedFiles, {type: this.draggedFiles[0].type});
+      imgUrl = await this.supabaseSvc.uploadImage(imgBlob);
+    }
 
     const newSecret = {
       title: secret.secretTitle,
       content: secret.secretContent,
-      media_url: imgUrl,
+      media_url: imgUrl as string ?? "",
       user_id: this.user_id,
     } as Secret;
 
