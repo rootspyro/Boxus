@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MySecretsInterceptor } from './interceptors/my-secrets.interceptor';
 
 @NgModule({
   declarations: [
@@ -14,9 +16,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     BrowserModule,
     AppRoutingModule,
     NgbModule,
+    HttpClientModule,
     NavbarComponent
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: MySecretsInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
