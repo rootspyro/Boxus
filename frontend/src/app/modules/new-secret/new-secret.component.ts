@@ -89,7 +89,7 @@ export class NewSecretComponent {
     try {
       if (this.secretForm.valid) {
         const formatedSecret = this.formatSecret(this.secretForm.value);
-        this.mySecretsSvc.postSecret(formatedSecret);
+        // this.mySecretsSvc.postSecret(formatedSecret);
         console.log(this.formatSecret(this.secretForm.value));
       } else {
         console.error('Los campos son inválidos');
@@ -100,7 +100,8 @@ export class NewSecretComponent {
   }
 
   private formatSecret(secret: any) {
-    const imgUrl = this.supabaseSvc.uploadImage(this.draggedFiles[0]);
+    const imgBlob = new Blob(this.draggedFiles, {type: this.draggedFiles[0].type});
+    const imgUrl = this.supabaseSvc.uploadImage(imgBlob);
 
     const newSecret = {
       title: secret.secretTitle,

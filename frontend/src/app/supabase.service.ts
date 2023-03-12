@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   AuthChangeEvent,
   AuthSession,
@@ -6,32 +7,35 @@ import {
   Session,
   SupabaseClient,
   User,
-} from '@supabase/supabase-js'
-import { environment } from './environments/environment'
+} from '@supabase/supabase-js';
+import { environment } from './environments/environment';
 
 export interface Profile {
-  id?: string
-  username: string
-  website: string
-  avatar_url: string
+  id?: string;
+  username: string;
+  website: string;
+  avatar_url: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupabaseService {
-  private supabase: SupabaseClient
-  _session: AuthSession | null = null
+  private supabase: SupabaseClient;
+  _session: AuthSession | null = null;
 
-  constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+  constructor(private httpClient: HttpClient) {
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseKey
+    );
   }
 
   get session() {
     this.supabase.auth.getSession().then(({ data }) => {
-      this._session = data.session
-    })
-    return this._session
+      this._session = data.session;
+    });
+    return this._session;
   }
 
   profile(user: User) {
@@ -39,15 +43,17 @@ export class SupabaseService {
       .from('profiles')
       .select(`username, website, avatar_url`)
       .eq('id', user.id)
-      .single()
+      .single();
   }
 
-  authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
-    return this.supabase.auth.onAuthStateChange(callback)
+  authChanges(
+    callback: (event: AuthChangeEvent, session: Session | null) => void
+  ) {
+    return this.supabase.auth.onAuthStateChange(callback);
   }
 
   signIn(email: string, password: string) {
-    return this.supabase.auth.signInWithPassword({ email, password })
+    return this.supabase.auth.signInWithPassword({ email, password });
   }
 
   signUp(email: string, password: string) {
@@ -59,27 +65,32 @@ export class SupabaseService {
   // }
 
   signOut() {
-    return this.supabase.auth.signOut()
+    return this.supabase.auth.signOut();
   }
 
   updateProfile(profile: Profile) {
     const update = {
       ...profile,
       updated_at: new Date(),
-    }
+    };
 
-    return this.supabase.from('profiles').upsert(update)
+    return this.supabase.from('profiles').upsert(update);
   }
 
   downLoadImage(path: string) {
-    return this.supabase.storage.from('avatars').download(path)
+    return this.supabase.storage.from('avatars').download(path);
   }
 
   uploadAvatar(filePath: string, file: File) {
-    return this.supabase.storage.from('avatars').upload(filePath, file)
+    return this.supabase.storage.from('avatars').upload(filePath, file);
   }
 
-  uploadImage(file: File): string {
-    return 'url desde supabase'
+  uploadImage(file: Blob): string {
+    let imgUrl = '';
+    this.httpClient
+      .post(environment.supabaseEndpointImg, file)
+      .subscribe(res => (res = imgUrl));
+
+    return imgUrl;
   }
 }
