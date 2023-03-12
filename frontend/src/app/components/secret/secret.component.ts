@@ -12,7 +12,7 @@ export class SecretComponent {
   @Input() secret!: any
 
   formatDate(date: string): string {
-    let formatedDate = formatDate(date, 'M/d/yy, h:mm a', 'es-VE');
+    let formatedDate = formatDate(date, 'd/M/yy, h:mm a', 'en-US');
 
     return formatedDate;
   }
