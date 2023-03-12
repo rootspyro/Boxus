@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand bg-body-tertiary">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand bg-body-tertiary border-bottom border-3 shadow">
+  <div class="container-fluid gap-4">
     <ul class="navbar-nav">
       <li class="nav-item dropdown">
         <a class="nav-link icon" role="button" data-bs-toggle="dropdown">
@@ -32,8 +32,8 @@
         </a>
       </li>
     </ul>
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <form class="d-flex flex-fill" role="search">
+      <input class="form-control me-2" type="search" placeholder="Busca en boxus" aria-label="Search">
     </form>
     <a class="navbar-brand" [routerLink]="['/login']" routerLinkActive="router-link-active">BOXUS</a>
   </div>
