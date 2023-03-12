@@ -10,6 +10,7 @@ import { SupabaseService } from 'src/app/supabase.service';
 
 export class LoginComponent {
   loading = false;
+  isLogging = true;
 
   loginForm = new FormGroup({
     email: new FormControl("", [
@@ -27,14 +28,13 @@ export class LoginComponent {
     private readonly supabase: SupabaseService,
   ) {}
 
-  async onSubmit(): Promise<void> {
+  async signIn(): Promise<void> {
     try {
-      console.log("executing");
       this.loading = true
       const email = this.loginForm.value.email as string
       const password = this.loginForm.value.password as string
-      // const { error } = await this.supabase.signIn(email, password);
-      const { error } = await this.supabase.signIn(email);
+      const { data, error } = await this.supabase.signIn(email, password);
+      console.log(data);
       if (error) throw error
       alert('Check your email for the login link!')
     } catch (error) {
@@ -45,5 +45,27 @@ export class LoginComponent {
       this.loginForm.reset()
       this.loading = false
     }
+  }
+
+  async signUp(): Promise<void> {
+    try {
+      this.loading = true
+      const email = this.loginForm.value.email as string
+      const password = this.loginForm.value.password as string
+      const { error } = await this.supabase.signUp(email, password);
+      if (error) throw error
+      alert('Check your email for the registration link!')
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    } finally {
+      this.loginForm.reset()
+      this.loading = false
+    }
+  }
+
+  toggleIsLogging(): void {
+    this.isLogging = !this.isLogging;
   }
 }
