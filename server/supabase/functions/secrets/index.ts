@@ -19,7 +19,8 @@ interface payload {
 
 async function getSecrets() {
   // Select all the secrets from the database in a range of 1000 by default
-  const { data: secrets, error } = await supabase.from('secrets').select('*');
+  //const { data: secrets, error } = await supabase.from('secrets').select('*');
+  const { data: secrets, error } = await supabase.from('secrets').select('id, created_at, title, content, status').eq('status', 'CLOSED');
   if (error) throw new Error(`${error.code} ${error.details} ${error.hint} ${error.message}`);
   return secrets;
 }
