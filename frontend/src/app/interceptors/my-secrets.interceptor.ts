@@ -13,7 +13,7 @@ import { SupabaseService } from '../supabase.service';
 
 @Injectable()
 export class MySecretsInterceptor implements HttpInterceptor {
-  private token = `Bearer ${this.supabaseSvc.session?.access_token}`;
+  private token = `Bearer ${environment.supabaseKey}`;
 
   constructor(private supabaseSvc: SupabaseService) {}
 

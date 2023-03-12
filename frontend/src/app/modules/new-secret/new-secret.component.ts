@@ -1,6 +1,5 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'src/app/environments/environment';
 import { Secret } from 'src/app/interfaces/secret';
 import { MySecretsService } from 'src/app/services/my-secrets.service';
 import { SupabaseService } from 'src/app/supabase.service';
@@ -26,6 +25,9 @@ export class NewSecretComponent {
   ngOnInit(): void {
     this.dragAreaClass = 'dragarea';
     this.secretForm = this.initForm();
+  }
+
+  ngAfterViewInit(): void {
     this.user_id = this.supabaseSvc.session?.user.id;
   }
 
@@ -83,26 +85,29 @@ export class NewSecretComponent {
     });
   }
 
-  sendSecret(): void {
+  sendSecret() {
     try {
       if (this.secretForm.valid) {
-        this.mySecretsSvc.postSecret(this.formatSecret(this.secretForm.value));
+        const formatedSecret = this.formatSecret(this.secretForm.value);
+        this.mySecretsSvc.postSecret(formatedSecret);
         console.log(this.formatSecret(this.secretForm.value));
       } else {
         console.error('Los campos son inválidos');
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   }
 
   private formatSecret(secret: any) {
-    const newSecret: Secret = {
+    const imgUrl = this.supabaseSvc.uploadImage(this.draggedFiles[0]);
+
+    const newSecret = {
       title: secret.secretTitle,
       content: secret.secretContent,
-      media_url: this.draggedFiles[0],
+      media_url: imgUrl,
       user_id: this.user_id,
-    };
+    } as Secret;
 
     return newSecret;
   }
