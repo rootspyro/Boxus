@@ -1,22 +1,38 @@
-<form *ngIf="isLogging; else signUpForm" [formGroup]='loginForm' (ngSubmit)="signIn()">
-  <label for='email'>Email</label>
-  <input type='email' name='email' id='email' formControlName="email">
-  <label for='password'>Contraseña</label>
-  <input type='password' name='password' id='password' formControlName="password" required>
-  <button type="submit" [disabled]="!loginForm.valid">Iniciar sesión</button>
-</form>
+<div class="container">
+  <div class="abs-center">
+    <form class="border p-3 form shadow-sm " *ngIf="isLogging; else signUpForm" [formGroup]='loginForm' (ngSubmit)="signIn()">
+      <div class="form-group">
+        <label for='email'>Email</label>
+        <input class="form-control" type='email' name='email' id='email' formControlName="email">
+      </div>
+      <div class="form-group mt-2">
+        <label for='password'>Contraseña</label>
+        <input class="form-control" type='password' name='password' id='password' formControlName="password" required>
+      </div>
+      <button  class="btn btn-secondary mt-3 w-100 rounded border p-1" type="submit" [disabled]="!loginForm.valid">Iniciar sesión</button>
+    </form>
 
-<ng-template #signUpForm>
-  <h2>Registrate</h2>
-  <form [formGroup]='loginForm' (ngSubmit)="signUp()">
-    <label for='email'>Email</label>
-    <input type='email' name='email' id='email' formControlName="email">
-    <label for='password'>Contraseña</label>
-    <input type='password' name='password' id='password' formControlName="password" required>
-    <button type="submit" [disabled]="!loginForm.valid">Iniciar sesión</button>
-  </form>
-</ng-template>
+    <ng-template #signUpForm>
+      <div class="container">
+        <div class="abs-center">
+        <h2 class="w-100 text-center mt-3">Regístrate</h2>
+        <form class="border p-3 form shadow-sm mt-3" [formGroup]='loginForm' (ngSubmit)="signUp()">
+          <div class="form-group">
+            <label for='email'>Email</label>
+            <input class="form-control" type='email' name='email' id='email' formControlName="email">
+          </div>
+          <div class="form-group mt-1">
+            <label for='password'>Contraseña</label>
+            <input class="form-control" type='password' name='password' id='password' formControlName="password" required>
+          </div>
+          <button class="btn btn-secondary mt-3 w-100 rounded border p-1" type="submit" [disabled]="!loginForm.valid">Registrarse</button>
+        </form>
+        </div>
+      </div>
+    </ng-template>
+  </div>
 
-<div>
-  <button type="button" (click)="toggleIsLogging()">{{ isLogging? "Crear cuenta nueva" : "Si ya tienes una cuenta haz click aquí" }}</button>
+    <div class="w-100 d-flex justify-content-center mt-3">
+      <button class="btn text-decoration-underline text-primary" type="button" (click)="toggleIsLogging()">{{ isLogging? "Crear cuenta nueva" : "Si ya tienes una cuenta haz click aquí" }}</button>
+    </div>
 </div>

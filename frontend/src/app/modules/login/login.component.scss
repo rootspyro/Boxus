@@ -1,0 +1,13 @@
+.abs-center{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.abs-center > form {
+  width: 90%;
+  min-width: 250px;
+  max-width: 500px;
+  margin-top: 25px;
+}
