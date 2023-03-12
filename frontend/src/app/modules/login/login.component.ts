@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SupabaseService } from 'src/app/supabase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent {
 
   constructor(
     private readonly supabase: SupabaseService,
+    private router: Router,
   ) {}
 
   async signIn(): Promise<void> {
@@ -36,7 +38,7 @@ export class LoginComponent {
       const { data, error } = await this.supabase.signIn(email, password);
       console.log(data);
       if (error) throw error
-      alert('Check your email for the login link!')
+      else  this.router.navigateByUrl('/')
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message)
