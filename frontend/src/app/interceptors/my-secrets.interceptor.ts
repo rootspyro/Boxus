@@ -7,11 +7,12 @@ import {
   HttpResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class MySecretsInterceptor implements HttpInterceptor {
-  private token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxb3Fyc2RuZHZvZW1meXlieGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzg1ODI3MDgsImV4cCI6MTk5NDE1ODcwOH0.0FMOme8085djxnX9PocaDtoy7jkZHllFMwRtrndYpx0'
+  private token = `Bearer ${environment.supabaseKey}`;
 
   intercept(
     request: HttpRequest<unknown>,
