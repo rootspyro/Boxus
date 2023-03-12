@@ -1,5 +1,4 @@
 import { SUPABASE_KEY, SUPABASE_URL } from '../_shared/config.ts';
-import * as postgres from 'https://deno.land/x/postgres@v0.14.2/mod.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import * as mod from 'https://deno.land/std@0.179.0/http/server.ts';
 import { router } from 'https://deno.land/x/rutt@0.1.0/mod.ts';
@@ -11,20 +10,28 @@ const supabaseKey = SUPABASE_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+interface payload {
+  title: string;
+  content: string;
+  media_url: string;
+  user_id: string;
+}
+
 async function getSecrets() {
+  // Select all the secrets from the database in a range of 1000 by default
   const { data: secrets, error } = await supabase.from('secrets').select('*');
   if (error) throw new Error(`${error.code} ${error.details} ${error.hint} ${error.message}`);
   return secrets;
 }
 
 async function getSecret(secretId: number) {
+  // Select just a single secret
   const { data: secrets, error } = await supabase.from('secrets').select('*').eq('id', secretId);
   if (error) throw new Error(`${error.code} ${error.details} ${error.hint} ${error.message}`);
   return secrets;
 }
 
 const handler = router({
-  
   'GET@/secrets': async function (_req) {
 
     try {
@@ -45,9 +52,8 @@ const handler = router({
     }
 
   },
-  'GET@/secrets/:id': async function (req) {
-    const secretId = req.url.split('/').at(-1);
-
+  'GET@/secrets/:id': async function (_req, _, { id }) {
+    const secretId: string = id;
     try {
       if (secretId) {
         const numberSecretId = parseInt(secretId);
@@ -61,7 +67,8 @@ const handler = router({
           },
         })
       }
-      throw new Error('secretId not defined')
+
+      throw new Error('secretId not defined');
 
     } catch (error) {
       return new Response('Something went wrong, error: ' + error, {
@@ -72,52 +79,38 @@ const handler = router({
   },
   'POST@/secrets': async function (req) {
 
-    const databaseUrl =  Deno.env.get('DATABASE_URL')!
-    const pool = new postgres.Pool(databaseUrl, 3, true)
-    
-    interface payload {
-      title: string;
-      content: string;
-      media_url: string;
-      user_id: string;
-    }
-
     try {
-
       const data : payload = await req.json()
 
-      // Grab a connection from the pool
-      const connection = await pool.connect()
+        // Run a query to insert the data and other one to get it
+        await supabase.from("secrets").insert(data);
+        const result = await supabase.from("secrets").select("*").eq("title", data.title).eq("user_id", data.user_id);
 
-      try {
-        // Run a query
-        const result = await connection.queryObject`INSERT INTO secrets(title, content, media_url, user_id ) VALUES(${data.title},${data.content},${data.media_url}, ${data.user_id}) returning id, title`
-        const secrets = result.rows // [{ id: 1, name: "Lion" }, ...]
-
-
-        // Encode the result as pretty printed JSON
-        const body = JSON.stringify(secrets,
-          (key, value) => (typeof value === 'bigint' ? value.toString() : value),
-          2
-        )
+        const body = JSON.stringify(result.data);
 
         // Return the response with the correct content type header
         return new Response(body, {
-          status: 200,
+          status: result.status,
+          statusText: result.statusText,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             ...corsHeaders
           },
         })
-      } finally {
-        // Release the connection back into the pool
-        connection.release()
-      }
+
     } catch (err) {
       console.error(err)
       return new Response(String(err?.message ?? err), { status: 500 })
     }
 
+  },
+  'OPTIONS@/secrets': function(_req) {
+    return new Response('ok', { headers: corsHeaders })
+  },
+  '*': function (_req) {
+    return new Response('Not implemented', {
+      status: 501,
+    })
   }
 })
 
