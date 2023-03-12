@@ -1,1 +1,40 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand bg-body-tertiary">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a class="nav-link icon" role="button" data-bs-toggle="dropdown">
+          <img src="assets/icons/user.png">
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" [routerLink]="['/config']" routerLinkActive="router-link-active">
+              <img src="assets/icons/config.png">
+              Configuración
+            </a></li>
+          <li><a class="dropdown-item" (click)="ngLogout()">
+              <img src="assets/icons/close-sesion.png">
+              Cerrar Sesión
+            </a></li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link icon" [routerLink]="['/messages']" routerLinkActive="router-link-active">
+          <img src="assets/icons/chat-icon.png">
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link icon" [routerLink]="['/new-secret']" routerLinkActive="router-link-active">
+          <img src="assets/icons/new-secret.png">
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link icon" [routerLink]="['/my-secrets']" routerLinkActive="router-link-active">
+          <img src="assets/icons/my-secrets.png">
+        </a>
+      </li>
+    </ul>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    </form>
+    <a class="navbar-brand" [routerLink]="['/login']" routerLinkActive="router-link-active">BOXUS</a>
+  </div>
+</nav>
