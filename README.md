@@ -14,5 +14,5 @@ Este proyecto es desarrollado por el equipo Canaimeros
  
  - [Antonio Cabello](https://github.com/Antonio476587)
  - [Javier Boscan](https://github.com/Javierbscn)
- - [José Ruiz](https://github.com)
+ - [José Ruiz](https://github.com/jorge-ssts)
  - [Spyridon Mihalopoulos](https://github.com/rootspyro)
