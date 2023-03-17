@@ -26,7 +26,10 @@ export class SupabaseService {
   private supabase: SupabaseClient;
   _session: AuthSession | null = null;
 
-  constructor(private httpClient: HttpClient, private readonly authSvc: AuthService) {
+  constructor(
+    private httpClient: HttpClient,
+    private readonly authSvc: AuthService
+  ) {
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabaseKey
@@ -88,14 +91,17 @@ export class SupabaseService {
     return this.supabase.storage.from('avatars').upload(filePath, file);
   }
 
-  uploadImage(file: Blob): Promise<string | void> {
-    const imgUrl = fetch(environment.supabaseEndpointImg, {
-      method: 'POST',
-      body: file,
-    })
-      .then((res) => res.text())
-      .catch((err) => console.log(err));
+  uploadImage(file: Blob) {
 
-    return imgUrl;
+    return this.httpClient
+      .post(environment.supabaseEndpointImg, file)
+      .subscribe(res => console.log(res));
+    // fetch(environment.supabaseEndpointImg, {
+    //   method: 'POST',
+    //   body: file,
+    // })
+    //   .then((res) => res.text())
+    //   .catch((err) => console.log(err));
+
   }
 }

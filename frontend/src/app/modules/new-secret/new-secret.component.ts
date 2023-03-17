@@ -111,7 +111,7 @@ export class NewSecretComponent {
     const newSecret = {
       title: secret.secretTitle,
       content: secret.secretContent,
-      media_url: imgUrl as string ?? "",
+      media_url: imgUrl || "",
       user_id: this.user_id,
     } as Secret;
 
