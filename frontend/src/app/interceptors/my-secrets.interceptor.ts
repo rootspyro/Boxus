@@ -7,15 +7,15 @@ import {
   HttpResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { catchError, Observable, tap } from 'rxjs';
-import { environment } from '../environments/environment';
-import { SupabaseService } from '../supabase.service';
+import { Observable, tap } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class MySecretsInterceptor implements HttpInterceptor {
-  private token = `Bearer ${environment.supabaseKey}`;
+  private token = this.authSvc.loggedUser.access_token;
+  private fullToken = `Bearer ${this.token}`;
 
-  constructor(private supabaseSvc: SupabaseService) {}
+  constructor(private authSvc: AuthService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -23,7 +23,7 @@ export class MySecretsInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
 
     const headers = new HttpHeaders({
-      Authorization: this.token
+      Authorization: this.fullToken
     })
 
     const headersClone = request.clone({headers})
