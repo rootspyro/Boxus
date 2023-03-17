@@ -11,4 +11,8 @@ export class AuthService {
   logoutUser(): void {
     localStorage.clear();
   }
+
+  get loggedUser(): any {
+    return JSON.parse(Object.values(localStorage)[0]);
+  }
 }

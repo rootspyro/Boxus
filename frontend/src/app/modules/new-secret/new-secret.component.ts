@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Secret } from 'src/app/interfaces/secret';
+import { AuthService } from 'src/app/services/auth.service';
 import { MySecretsService } from 'src/app/services/my-secrets.service';
 import { SupabaseService } from 'src/app/supabase.service';
 
@@ -19,17 +20,17 @@ export class NewSecretComponent {
   constructor(
     private readonly formBuilder: FormBuilder,
     private mySecretsSvc: MySecretsService,
-    private supabaseSvc: SupabaseService
+    private supabaseSvc: SupabaseService,
+    public authSvc: AuthService
   ) {}
 
   ngOnInit(): void {
     this.dragAreaClass = 'dragarea';
     this.secretForm = this.initForm();
-    this.user_id = this.supabaseSvc.session?.user.id;
   }
 
   ngAfterViewInit(): void {
-    this.user_id = this.supabaseSvc.session?.user.id;
+    this.user_id = this.authSvc.loggedUser.user.id;
   }
 
   @HostListener('dragover', ['$event']) onDragOver(event: any) {
