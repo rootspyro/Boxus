@@ -8,7 +8,9 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
+import { Observable, Subject } from 'rxjs';
 import { environment } from './environments/environment';
+import { AuthService } from './services/auth.service';
 
 export interface Profile {
   id?: string;
@@ -24,7 +26,7 @@ export class SupabaseService {
   private supabase: SupabaseClient;
   _session: AuthSession | null = null;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private readonly authSvc: AuthService) {
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabaseKey
@@ -65,6 +67,7 @@ export class SupabaseService {
   // }
 
   signOut() {
+    this.authSvc.logoutUser();
     return this.supabase.auth.signOut();
   }
 
@@ -86,11 +89,12 @@ export class SupabaseService {
   }
 
   uploadImage(file: Blob): Promise<string | void> {
-
     const imgUrl = fetch(environment.supabaseEndpointImg, {
-      method: "POST",
+      method: 'POST',
       body: file,
-    }).then((res) => res.text()).catch((err) => console.log(err));
+    })
+      .then((res) => res.text())
+      .catch((err) => console.log(err));
 
     return imgUrl;
   }
