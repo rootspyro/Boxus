@@ -22,9 +22,7 @@ export class MySecretsInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
 
-    const headers = new HttpHeaders({
-      Authorization: this.fullToken
-    })
+    const headers = new HttpHeaders().set('Authorization', this.fullToken)
 
     const headersClone = request.clone({headers})
 
