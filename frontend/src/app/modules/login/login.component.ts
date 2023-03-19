@@ -30,6 +30,57 @@ export class LoginComponent {
     private router: Router,
   ) {}
 
+  async signInWithGoogle(): Promise<void> {
+    try {
+      this.loading = true
+      const { data, error } = await this.supabase.signInWithGoogle();
+      console.log(data);
+      if (error) throw error
+      this.router.navigateByUrl('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    } finally {
+      this.loginForm.reset()
+      this.loading = false
+    }
+  }
+
+  async signInWithFacebook(): Promise<void> {
+    try {
+      this.loading = true
+      const { data, error } = await this.supabase.signInWithFacebook();
+      console.log(data);
+      if (error) throw error
+      this.router.navigateByUrl('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    } finally {
+      this.loginForm.reset()
+      this.loading = false
+    }
+  }
+
+  async signInWithGitHub(): Promise<void> {
+    try {
+      this.loading = true
+      const { data, error } = await this.supabase.signInWithGitHub();
+      console.log(data);
+      if (error) throw error
+      this.router.navigateByUrl('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    } finally {
+      this.loginForm.reset()
+      this.loading = false
+    }
+  }
+
   async signIn(): Promise<void> {
     try {
       this.loading = true
@@ -38,7 +89,7 @@ export class LoginComponent {
       const { data, error } = await this.supabase.signIn(email, password);
       console.log(data);
       if (error) throw error
-      else  this.router.navigateByUrl('/')
+      this.router.navigateByUrl('/')
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message)
