@@ -1,5 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { map, Observable, of, take } from 'rxjs';
 import { Secret } from 'src/app/interfaces/secret';
 import { AuthService } from 'src/app/services/auth.service';
 import { MySecretsService } from 'src/app/services/my-secrets.service';
@@ -15,10 +17,12 @@ export class NewSecretComponent {
   dragAreaClass!: string;
   draggedFiles!: any;
   secretForm!: FormGroup;
+  previewImg!: any;
   private user_id: string | undefined;
 
   constructor(
     private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
     private mySecretsSvc: MySecretsService,
     private supabaseSvc: SupabaseService,
     public authSvc: AuthService
@@ -87,12 +91,15 @@ export class NewSecretComponent {
     });
   }
 
-  async sendSecret() {
+  sendSecret() {
     try {
       if (this.secretForm.valid) {
-        const formatedSecret = this.formatSecret(this.secretForm.value);
-        this.mySecretsSvc.postSecret(await formatedSecret);
-        console.log(this.formatSecret(this.secretForm.value));
+        this.formatSecret(this.secretForm.value)
+          .pipe(take(1))
+          .subscribe((secret) => {
+            this.mySecretsSvc.postSecret(secret);
+            this.router.navigate(['my-secrets']);
+          });
       } else {
         console.error('Los campos son inválidos');
       }
@@ -101,20 +108,33 @@ export class NewSecretComponent {
     }
   }
 
-  private async formatSecret(secret: any) {
-    let imgUrl = null;
-    if (this.draggedFiles) {
-      const imgBlob = new Blob(this.draggedFiles, {type: this.draggedFiles[0].type});
-      imgUrl = await this.supabaseSvc.uploadImage(imgBlob);
-    }
-
+  formatSecret(secret: any): Observable<Secret> {
     const newSecret = {
       title: secret.secretTitle,
       content: secret.secretContent,
-      media_url: imgUrl || "",
+      media_url: '',
       user_id: this.user_id,
     } as Secret;
 
-    return newSecret;
+    if (this.draggedFiles) {
+      const imgBlob = new Blob(this.draggedFiles, {
+        type: this.draggedFiles[0].type,
+      });
+
+      return this.supabaseSvc.uploadImage(imgBlob).pipe(
+        take(1),
+        map((res) => {
+          console.log('Entramos en el Observable');
+          console.log(res);
+
+          newSecret.media_url = res.body;
+
+          return newSecret;
+        })
+      );
+    } else {
+      console.log('No entramos al Observable');
+      return of(newSecret);
+    }
   }
 }

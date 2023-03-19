@@ -8,7 +8,6 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
-import { Observable, Subject } from 'rxjs';
 import { environment } from './environments/environment';
 import { AuthService } from './services/auth.service';
 
@@ -92,16 +91,9 @@ export class SupabaseService {
   }
 
   uploadImage(file: Blob) {
-
-    return this.httpClient
-      .post(environment.supabaseEndpointImg, file)
-      .subscribe(res => console.log(res));
-    // fetch(environment.supabaseEndpointImg, {
-    //   method: 'POST',
-    //   body: file,
-    // })
-    //   .then((res) => res.text())
-    //   .catch((err) => console.log(err));
-
+    return this.httpClient.post(environment.supabaseEndpointImg, file, {
+      observe: 'response',
+      responseType: 'blob' as 'json',
+    });
   }
 }
