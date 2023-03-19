@@ -1,5 +1,8 @@
 <div class="container">
   <div class="abs-center">
+    <button (click)="signInWithGoogle()">Google</button>
+    <button (click)="signInWithFacebook()">Facebook</button>
+    <button (click)="signInWithGitHub()">GitHub</button>
     <form class="border p-3 form shadow-sm " *ngIf="isLogging; else signUpForm" [formGroup]='loginForm' (ngSubmit)="signIn()">
       <div class="form-group">
         <label for='email'>Email</label>

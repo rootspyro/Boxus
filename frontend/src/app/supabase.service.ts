@@ -61,6 +61,30 @@ export class SupabaseService {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
 
+  signInWithGoogle() {
+    return this.supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: "http://localhost:4200/",
+      }
+    });
+  }
+
+  signInWithFacebook() {
+    return this.supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: "http://localhost:4200/",
+      }
+    });
+  }
+
+  signInWithGitHub() {
+    return this.supabase.auth.signInWithOAuth({
+      provider: 'github',
+    });
+  }
+
   signUp(email: string, password: string) {
     return this.supabase.auth.signUp({ email, password });
   }
