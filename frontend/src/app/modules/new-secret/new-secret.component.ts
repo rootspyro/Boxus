@@ -1,6 +1,9 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { map, Observable, of, take, tap } from 'rxjs';
 import { Secret } from 'src/app/interfaces/secret';
+import { AuthService } from 'src/app/services/auth.service';
 import { MySecretsService } from 'src/app/services/my-secrets.service';
 import { SupabaseService } from 'src/app/supabase.service';
 
@@ -18,18 +21,19 @@ export class NewSecretComponent {
 
   constructor(
     private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
     private mySecretsSvc: MySecretsService,
-    private supabaseSvc: SupabaseService
+    private backendSvc: SupabaseService,
+    private authSvc: AuthService
   ) {}
 
   ngOnInit(): void {
     this.dragAreaClass = 'dragarea';
     this.secretForm = this.initForm();
-    this.user_id = this.supabaseSvc.session?.user.id;
   }
 
   ngAfterViewInit(): void {
-    this.user_id = this.supabaseSvc.session?.user.id;
+    this.user_id = this.authSvc.loggedUser.user.id;
   }
 
   @HostListener('dragover', ['$event']) onDragOver(event: any) {
@@ -86,34 +90,51 @@ export class NewSecretComponent {
     });
   }
 
-  async sendSecret() {
+  sendSecret() {
     try {
       if (this.secretForm.valid) {
-        const formatedSecret = this.formatSecret(this.secretForm.value);
-        this.mySecretsSvc.postSecret(await formatedSecret);
-        console.log(this.formatSecret(this.secretForm.value));
+        this.formatSecret(this.secretForm.value)
+          .pipe(
+            take(1),
+            tap((secret: Secret) => {
+              console.log(secret);
+              this.mySecretsSvc.postSecret(secret);
+              this.router.navigate(['my-secrets']);
+            })
+          )
+          .subscribe();
       } else {
-        console.error('Los campos son inválidos');
+        this.error =
+          'Algo ha fallado al subir tu secreto. Inténtalo nuevamente';
       }
     } catch (err) {
       console.error(err);
     }
   }
 
-  private async formatSecret(secret: any) {
-    let imgUrl = null;
-    if (this.draggedFiles) {
-      const imgBlob = new Blob(this.draggedFiles, {type: this.draggedFiles[0].type});
-      imgUrl = await this.supabaseSvc.uploadImage(imgBlob);
-    }
-
+  formatSecret(secret: any): Observable<Secret> {
     const newSecret = {
       title: secret.secretTitle,
       content: secret.secretContent,
-      media_url: imgUrl as string ?? "",
+      media_url: '',
       user_id: this.user_id,
     } as Secret;
 
-    return newSecret;
+    if (this.draggedFiles) {
+      const imgBlob = new Blob(this.draggedFiles, {
+        type: this.draggedFiles[0].type,
+      });
+
+      return this.backendSvc.uploadImage(imgBlob).pipe(
+        take(1),
+        map((res: string) => {
+          const img = res.split('&token')[0];
+          newSecret.media_url = img;
+          return newSecret;
+        })
+      );
+    } else {
+      return of(newSecret);
+    }
   }
 }
