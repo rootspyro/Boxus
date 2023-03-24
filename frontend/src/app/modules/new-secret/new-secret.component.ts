@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map, Observable, of, take } from 'rxjs';
+import { map, Observable, of, take, tap } from 'rxjs';
 import { Secret } from 'src/app/interfaces/secret';
 import { AuthService } from 'src/app/services/auth.service';
 import { MySecretsService } from 'src/app/services/my-secrets.service';
@@ -17,15 +17,14 @@ export class NewSecretComponent {
   dragAreaClass!: string;
   draggedFiles!: any;
   secretForm!: FormGroup;
-  previewImg!: any;
   private user_id: string | undefined;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private mySecretsSvc: MySecretsService,
-    private supabaseSvc: SupabaseService,
-    public authSvc: AuthService
+    private backendSvc: SupabaseService,
+    private authSvc: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -95,13 +94,18 @@ export class NewSecretComponent {
     try {
       if (this.secretForm.valid) {
         this.formatSecret(this.secretForm.value)
-          .pipe(take(1))
-          .subscribe((secret) => {
-            this.mySecretsSvc.postSecret(secret);
-            this.router.navigate(['my-secrets']);
-          });
+          .pipe(
+            take(1),
+            tap((secret: Secret) => {
+              console.log(secret);
+              this.mySecretsSvc.postSecret(secret);
+              this.router.navigate(['my-secrets']);
+            })
+          )
+          .subscribe();
       } else {
-        console.error('Los campos son inválidos');
+        this.error =
+          'Algo ha fallado al subir tu secreto. Inténtalo nuevamente';
       }
     } catch (err) {
       console.error(err);
@@ -121,19 +125,15 @@ export class NewSecretComponent {
         type: this.draggedFiles[0].type,
       });
 
-      return this.supabaseSvc.uploadImage(imgBlob).pipe(
+      return this.backendSvc.uploadImage(imgBlob).pipe(
         take(1),
-        map((res) => {
-          console.log('Entramos en el Observable');
-          console.log(res);
-
-          newSecret.media_url = res.body;
-
+        map((res: string) => {
+          const img = res.split('&token')[0];
+          newSecret.media_url = img;
           return newSecret;
         })
       );
     } else {
-      console.log('No entramos al Observable');
       return of(newSecret);
     }
   }

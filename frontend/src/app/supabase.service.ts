@@ -8,6 +8,7 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
+import { Observable, tap } from 'rxjs';
 import { environment } from './environments/environment';
 import { AuthService } from './services/auth.service';
 
@@ -90,10 +91,9 @@ export class SupabaseService {
     return this.supabase.storage.from('avatars').upload(filePath, file);
   }
 
-  uploadImage(file: Blob) {
+  uploadImage(file: Blob): Observable<string> {
     return this.httpClient.post(environment.supabaseEndpointImg, file, {
-      observe: 'response',
-      responseType: 'blob' as 'json',
+      responseType: 'text',
     });
   }
 }
