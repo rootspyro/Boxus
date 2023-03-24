@@ -1,11 +1,15 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Sensitive Files
+/server/supabase/functions/_shared/config.ts
+/frontend/src/environments/*
+
 # Compiled output
 /dist
 /tmp
 /out-tsc
 /bazel-out
- 
+
 # Angular
 .angular/
 
