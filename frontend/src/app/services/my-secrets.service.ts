@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Secret } from '../interfaces/secret';
+import { fullSecret, Secret } from '../interfaces/secret';
 
 @Injectable({ providedIn: 'root' })
 export class MySecretsService {
@@ -20,7 +20,7 @@ export class MySecretsService {
       .subscribe();
   }
 
-  get allSecrets(): Observable<Secret[]> {
+  get allSecrets(): Observable<fullSecret[]> {
     return this.mySecrets$;
   }
 
