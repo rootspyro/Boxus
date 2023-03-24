@@ -1,6 +1,6 @@
 export interface Secret {
   title: string;
   content: string;
-  media_url: any;
+  media_url: string;
   user_id: string;
 }
