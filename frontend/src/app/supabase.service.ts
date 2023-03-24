@@ -8,8 +8,8 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
-import { Observable, tap } from 'rxjs';
-import { environment } from './environments/environment';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { AuthService } from './services/auth.service';
 
 export interface Profile {
