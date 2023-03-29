@@ -1,57 +1,55 @@
-<nav class="navbar navbar-expand bg-body-tertiary border-bottom border-3 shadow">
-  <div class="container-fluid gap-4">
-    <ul class="navbar-nav">
-      <li *ngIf="isLogged; else notLogged" class="nav-item">
+<nav class="navbar navbar-expand bg-body-tertiary border-right border-3 col col-lg-4 shadow navbar-logged">
+  <div class="container-fluid gap-4 h-100 flex-column">
+    <a class="navbar-brand logo-boxus p-3" routerLink="/">Boxus</a>
+    <ul class="navbar-nav flex-lg-column h-100">
+      <li *ngIf="isLogged; else notLogged" class="nav-item my-3">
         <div ngbDropdown>
-          <a class="nav-link icon" id="dropdown" ngbDropdownToggle role="button">
-            <img src="assets/icons/user.png">
+          <a class="nav-link icon-2" id="dropdown" ngbDropdownToggle role="button">
+            <img src="assets/icons/user.png"> <span class="d-none d-lg-inline-block px-3">{{ username }}</span>
           </a>
           <ul ngbDropdownMenu aria-labelledby="dropdown">
             <!-- <li ngbDropdownItem>
-              <a class="d-flex gap-2 text-decoration-none text-black" [routerLink]="['/config']" routerLinkActive="router-link-active">
-                <div class="rounded bg-dark-subtle icon p-1">
-                  <img src="assets/icons/config.png">
-                </div>
-                Configuración
-              </a>
-            </li> -->
+                <a class="d-flex gap-2 text-decoration-none text-black pe-auto" [routerLink]="['/config']" routerLinkActive="router-link-active">
+                  <div class="rounded bg-dark-subtle icon p-1">
+                    <img src="assets/icons/config.png">
+                  </div>
+                  Configuración
+                </a>
+              </li> -->
             <li ngbDropdownItem>
-              <a class="d-flex gap-2 text-decoration-none text-black" (click)="ngLogout()">
+              <a class="d-flex gap-2 text-decoration-none text-black pe-auto" (click)="ngLogout()">
                 <div class="rounded bg-dark-subtle icon p-1">
                   <img src="assets/icons/close-sesion.png">
                 </div>
                 Cerrar Sesión
               </a>
+              <small class="text-secondary d-lg-none">({{ username }})</small>
             </li>
           </ul>
         </div>
       </li>
       <ng-template #notLogged>
-        <li class="nav-item">
-          <a class="nav-link icon" [routerLink]="['/login']" routerLinkActive="router-link-active">
-            <img src="assets/icons/user.png">
+        <li class="nav-item my-3">
+          <a class="nav-link icon-2" [routerLink]="['/login']" routerLinkActive="router-link-active">
+            <img src="assets/icons/user.png"> <span class="d-none d-lg-inline-block px-3">Inicia sesión</span>
           </a>
         </li>
       </ng-template>
-      <li class="nav-item" *ngIf="isLogged">
-        <a class="nav-link icon" [routerLink]="['/messages']" routerLinkActive="router-link-active">
-          <img src="assets/icons/chat-icon.png">
+      <li class="nav-item my-3" *ngIf="isLogged">
+        <a class="nav-link icon-2" [routerLink]="['/messages']" routerLinkActive="router-link-active">
+          <img src="assets/icons/chat-icon.png"> <span class="d-none d-lg-inline-block px-3">Mensajes</span>
         </a>
       </li>
-      <li class="nav-item" *ngIf="isLogged">
-        <a class="nav-link icon" [routerLink]="['/new-secret']" routerLinkActive="router-link-active">
-          <img src="assets/icons/new-secret.png">
+      <li class="nav-item my-3" *ngIf="isLogged">
+        <a class="nav-link icon-2" [routerLink]="['/new-secret']" routerLinkActive="router-link-active">
+          <img src="assets/icons/new-secret.png"> <span class="d-none d-lg-inline-block px-3">Nuevo Secreto</span>
         </a>
       </li>
-      <li class="nav-item" *ngIf="isLogged">
-        <a class="nav-link icon" [routerLink]="['/my-secrets']" routerLinkActive="router-link-active">
-          <img src="assets/icons/my-secrets.png">
+      <li class="nav-item my-3" *ngIf="isLogged">
+        <a class="nav-link icon-2" [routerLink]="['/my-secrets']" routerLinkActive="router-link-active">
+          <img src="assets/icons/my-secrets.png"> <span class="d-none d-lg-inline px-3">Mis secretos</span>
         </a>
       </li>
     </ul>
-    <form class="d-flex flex-fill" role="search">
-      <input class="form-control me-2" type="search" placeholder="Busca en boxus" aria-label="Search">
-    </form>
-    <a class="navbar-brand" [routerLink]="['/login']" routerLinkActive="router-link-active">BOXUS</a>
   </div>
 </nav>
