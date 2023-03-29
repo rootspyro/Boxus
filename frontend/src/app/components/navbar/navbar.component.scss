@@ -1,9 +1,16 @@
 a {
-  &.icon {
+
+  &.icon,
+  &.icon-2 {
     background-color: var(--bs-gray-200);
     border-radius   : 100%;
     cursor          : pointer;
     margin          : 0 .5rem;
+    transition      : all .3s ease;
+  }
+
+  &.icon-2 {
+    border-radius: 1rem
   }
 
   img {
@@ -15,10 +22,28 @@ a {
   }
 }
 
-div.icon {
+div.icon,
+input {
   background-color: var(--bs-gray-200);
 }
 
-input {
-  background-color: var(--bs-gray-200);
+.logo-boxus {
+  font-size     : 3rem;
+  letter-spacing: 0.25rem;
+  text-shadow   : 4px 4px 1px var(--bs-black);
+  font-style    : oblique;
+  font-weight   : 700;
+  color         : var(--bs-gray-100);
+}
+
+@media (min-width: 992px) {
+  .navbar-logged {
+    position   : fixed;
+    height     : 100vh;
+    align-items: flex-start;
+
+    a.icon-2:hover {
+      background-color: var(--bs-white);
+    }
+  }
 }

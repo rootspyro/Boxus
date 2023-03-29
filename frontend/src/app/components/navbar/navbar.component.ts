@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavbarComponent implements DoCheck {
   isLogged: boolean;
+  username!: string;
 
   constructor(
     private router: Router,
@@ -21,6 +22,9 @@ export class NavbarComponent implements DoCheck {
     private readonly authSvc: AuthService
   ) {
     this.isLogged = this.authSvc.isLoggedUser();
+    if (this.isLogged) {
+      this.username = this.authSvc.loggedUser.user.email;
+    }
   }
 
   ngOnInit(): void {
@@ -28,9 +32,10 @@ export class NavbarComponent implements DoCheck {
   }
 
   ngDoCheck(): void {
-    // this.isLogged = this.supabase.isLogged;
-    // console.log(this.isLogged);
     this.isLogged = this.authSvc.isLoggedUser();
+    if (this.isLogged) {
+      this.username = this.authSvc.loggedUser.user.email;
+    }
   }
 
   async ngLogout(): Promise<void> {
