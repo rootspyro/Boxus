@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent {
-
+  ngSendMsg(event: Event) {
+    event.preventDefault()
+    console.log(event.target)
+  }
 }

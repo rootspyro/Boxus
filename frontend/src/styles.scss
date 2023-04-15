@@ -2,3 +2,22 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+* {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bs-gray-400) var(--bs-light);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bs-light);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--bs-gray-400);
+    border-radius   : 8px;
+  }
+}
