@@ -1,3 +1,8 @@
+export interface ChatData {
+  chat: Chat;
+  messages: string[];
+}
+
 export interface Chat {
   id: number;
   created_at: string;
