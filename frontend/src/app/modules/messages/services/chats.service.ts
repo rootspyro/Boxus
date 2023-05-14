@@ -1,23 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Chat } from '../models/Chat';
+import { Observable } from 'rxjs';
+import { ChatData } from '../models/Chat';
 import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatsService {
-  private chatsBehaviorSubject$ = new BehaviorSubject<Chat[]>([]);
-  private chats$: Observable<Chat[]> = this.chatsBehaviorSubject$.asObservable();
+  constructor(
+    private httpClient: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  constructor(private httpClient: HttpClient) {
-    httpClient
-      .get<Chat[]>(environment.supabaseEndpointChats)
-      .pipe(tap((chats) => this.chatsBehaviorSubject$.next(chats)));
-  }
-
-  get getAllChats(): Observable<Chat[]> {
-    return this.chats$;
+  getAllChats(offset: number): Observable<ChatData[]> {
+    return this.httpClient.get<ChatData[]>(
+      `${environment.supabaseEndpointChats}/?id=${this.authService.loggedUser.user.id}?offset=${offset}`
+    );
   }
 }
