@@ -1,6 +1,7 @@
 export interface ChatData {
   chat: Chat;
-  messages: string[];
+  messages: Message[];
+  secret_img: string;
 }
 
 export interface Chat {
@@ -9,4 +10,9 @@ export interface Chat {
   user_1: string;
   user_2: string;
   purpose_secret: string;
+}
+
+export interface Message {
+  content: string;
+  created_at: string;
 }

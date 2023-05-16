@@ -8,9 +8,9 @@ import { ChatsService } from './services/chats.service';
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent {
-  chatDataSource: ChatDataSource;
+  dataSource: ChatDataSource;
 
   constructor(private chatsService: ChatsService) {
-    this.chatDataSource = new ChatDataSource(chatsService);
+    this.dataSource = new ChatDataSource(this.chatsService);
   }
 }
