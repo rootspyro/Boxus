@@ -1,20 +1,19 @@
 import { DataSource, CollectionViewer } from '@angular/cdk/collections';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ChatData } from '../models/Chat';
 import { ChatsService } from './chats.service';
 
 export class ChatDataSource extends DataSource<ChatData | undefined> {
-  private chatsInMemory: ChatData[] = [];
-  private chatsChange$: BehaviorSubject<ChatData[]>;
+  private itemChanges$: BehaviorSubject<ChatData[]>;
   private destroy$: Subject<boolean> = new Subject();
   private pageSize = 10;
-  private offset = 0;
+  private lastLoadedPage = 0;
 
   constructor(private chatsService: ChatsService) {
     super();
-    this.chatsChange$ = new BehaviorSubject(this.chatsInMemory);
-    this.getAllChats(this.offset);
+    this.itemChanges$ = new BehaviorSubject(Array.from<ChatData>({length: 0}));
+    this.getAllChats(this.lastLoadedPage);
   }
 
   connect(collectionViewer: CollectionViewer) {
@@ -23,19 +22,22 @@ export class ChatDataSource extends DataSource<ChatData | undefined> {
       .subscribe((range) => {
         const currentPage = Math.floor(range.end / this.pageSize);
 
-        if (currentPage > this.offset) {
+        if (currentPage > this.lastLoadedPage) {
           // Updating the page where the user's stay
-          this.offset = currentPage;
-          this.getAllChats(this.offset);
+          this.lastLoadedPage = currentPage;
+          this.getAllChats(this.lastLoadedPage);
         }
       });
-    return this.chatsChange$;
+    return this.itemChanges$;
   }
 
   getAllChats(offset: number): void {
     this.chatsService
       .getAllChats(offset)
-      .pipe(tap((chats) => this.chatsChange$.next(chats)));
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((chats) => {
+        this.itemChanges$.next([...this.itemChanges$.getValue(), ...chats]) 
+      });
   }
 
   disconnect(): void {
