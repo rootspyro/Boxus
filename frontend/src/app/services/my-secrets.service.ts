@@ -1,34 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { fullSecret, Secret } from '../interfaces/secret';
-import { environment } from 'src/environments/environment';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { FullSecret, Secret } from '../interfaces/secret';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MySecretsService {
-  private mySecretsSubject = new BehaviorSubject<any>([]);
-  private mySecrets$ = this.mySecretsSubject.asObservable();
+  private mySecretsSubject$ = new BehaviorSubject<FullSecret[]>([]);
 
-  constructor(private httpClient: HttpClient) {
-    this.getSecrets();
+  constructor(private httpClient: HttpClient) {}
+
+  private getAllSecrets(offset: number): Observable<FullSecret[]> {
+    return this.httpClient.get<FullSecret[]>(
+      `${environment.supabaseEndpoint}?offset=${offset}`
+    );
   }
 
-  private getSecrets(): void {
-    this.httpClient
-      .get(environment.supabaseEndpoint)
-      .pipe(tap((data) => this.mySecretsSubject.next(data)))
+  get secrets$(): Observable<FullSecret[]> {
+    return this.mySecretsSubject$.asObservable();
+  }
+
+  set updateSecrets(offset: number) {
+    this.getAllSecrets(offset)
+      .pipe(
+        take(1),
+        tap((newSecrets) => {
+          const updatedSecrets = [
+            ...this.mySecretsSubject$.getValue(),
+            ...newSecrets,
+          ];
+          this.mySecretsSubject$.next(updatedSecrets);
+        })
+      )
       .subscribe();
   }
 
-  get allSecrets(): Observable<fullSecret[]> {
-    return this.mySecrets$;
+  clearSecrets(): void {
+    this.mySecretsSubject$.complete();
+    this.mySecretsSubject$ = new BehaviorSubject<FullSecret[]>([]);
   }
 
   postSecret(secret: Secret): void {
-    this.httpClient
-      .post(environment.supabaseEndpoint, secret)
-      .subscribe((res) => console.log(res));
-
-    this.getSecrets();
+    this.httpClient.post(environment.supabaseEndpoint, secret);
   }
 }
