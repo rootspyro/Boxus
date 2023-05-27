@@ -13,6 +13,6 @@ export interface Chat {
 }
 
 export interface Message {
-  content: string;
+  message: string;
   created_at: string;
 }
