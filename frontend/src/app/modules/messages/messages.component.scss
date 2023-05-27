@@ -1,26 +1,22 @@
-cdk-virtual-scroll-viewport {
-  height: 100vh;
+button {
+  height: 100px;
 
-  button {
-    height: 100px;
+  .text-ellipsis {
+    width        : calc(100% - 47px);
+    text-overflow: ellipsis;
+    white-space  : nowrap;
+    overflow     : hidden;
+    text-align   : start;
+  }
 
-    .text-ellipsis {
-      width        : calc(100% - 47px);
-      text-overflow: ellipsis;
-      white-space  : nowrap;
-      overflow     : hidden;
-      text-align   : start;
-    }
-  
-    .img {
-      width        : 75px;
-      height       : 75px;
-      object-fit   : cover;
-      border-radius: 100%;
-    }
+  .img {
+    width        : 75px;
+    height       : 75px;
+    object-fit   : cover;
+    border-radius: 100%;
+  }
 
-    small {
-      font-size: 0.8rem;
-    }
+  small {
+    font-size: 0.8rem;
   }
 }

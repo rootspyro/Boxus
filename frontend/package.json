@@ -23,6 +23,7 @@
     "@popperjs/core": "^2.11.6",
     "@supabase/supabase-js": "^2.10.0",
     "bootstrap": "^5.2.3",
+    "ngx-infinite-scroll": "15.0.0",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.6.1",
     "tslib": "^2.3.0",
