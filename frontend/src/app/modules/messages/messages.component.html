@@ -1,15 +1,3 @@
-<!-- <cdk-virtual-scroll-viewport itemSize="100">
-  <button *cdkVirtualFor="let chatItem of dataSource" routerLink="./{{ chatItem.chat.id }}" class="card w-100 d-flex flex-row align-items-center">
-    <img *ngIf="chatItem.secret_img" class="img" [src]="chatItem.secret_img" [alt]="chatItem.chat.purpose_secret">
-    <div class="card-body position-relative">
-      <div class="fs-4 d-flex justify-content-between">
-        <h3 class="text-ellipsis card-title">{{ chatItem.chat.purpose_secret }}</h3> <small>{{ chatItem.messages[0].created_at | date:'shortTime' }}</small>
-      </div>
-      <p class="text-start text-ellipsis">{{ chatItem.messages[0].message }}</p>
-    </div>
-  </button>
-</cdk-virtual-scroll-viewport> -->
-
 <section infiniteScroll (scrolled)="onScrolledMessages()">
   <button *ngFor="let chatItem of chatItems$ | async" routerLink="./{{ chatItem.chat.id }}"
     class="card w-100 d-flex flex-row align-items-center">
