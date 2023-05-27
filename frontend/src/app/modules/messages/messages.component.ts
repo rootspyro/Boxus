@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-// import { ChatDataSource } from './services/chats.datasource';
 import { ChatsService } from './services/chats.service';
 import { ChatData } from './models/Chat';
 import { Observable } from 'rxjs';
@@ -10,12 +9,10 @@ import { Observable } from 'rxjs';
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnDestroy {
-  // dataSource: ChatDataSource;
-  chatItems$: Observable<ChatData[]>;
   private offset: number = 0;
+  chatItems$: Observable<ChatData[]>;
 
   constructor(private chatsService: ChatsService) {
-    // this.dataSource = new ChatDataSource(this.chatsService);
     chatsService.updateChats = this.offset;
     this.chatItems$ = chatsService.chats$;
   }
