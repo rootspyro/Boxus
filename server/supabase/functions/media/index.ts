@@ -29,7 +29,6 @@ serve(async (req) => {
     });
   }
 
-  console.log(req);
   const data = await req.blob();
 
   const staticRef = ref(storage, crypto.randomUUID());
