@@ -1,1 +1,16 @@
-<p>messages works!</p>
+<section infiniteScroll (scrolled)="onScrolledMessages()">
+  <button *ngFor="let chatItem of chatItems$ | async" routerLink="./{{ chatItem.chat.id }}"
+    class="card w-100 d-flex flex-row align-items-center">
+    <img *ngIf="chatItem.secret_img" class="img" [src]="chatItem.secret_img" [alt]="chatItem.chat.purpose_secret">
+    <div class="card-body position-relative">
+      <div class="fs-4 d-flex justify-content-between">
+        <h3 class="text-ellipsis card-title">{{ chatItem.chat.purpose_secret }}</h3> <small *ngIf="chatItem.messages[0]">{{
+          chatItem.messages[0].created_at | date:'shortTime' }}</small>
+      </div>
+      <p class="text-start text-ellipsis" *ngIf="chatItem.messages[0]; else withoutMessages">{{ chatItem.messages[0].message }}</p>
+      <ng-template #withoutMessages>
+        <p class="text-start text-ellipsis">There is not any message yet</p>
+      </ng-template>
+    </div>
+  </button>
+</section>

@@ -1,0 +1,48 @@
+.card {
+  max-height: calc(100vh);
+
+  .card-header h4 {
+    width        : calc(minmax(600px, auto));
+    text-overflow: ellipsis;
+    white-space  : nowrap;
+    overflow     : hidden;
+  }
+
+  .card-body {
+    background: url('/assets/icons/chat-pattern.png');
+    overflow-y: scroll;
+
+    .msg {
+      align-self      : end;
+      background-color: var(--bs-cyan);
+      text-align      : start;
+      padding         : .5em;
+      border-radius   : .75em .75em 0;
+      width           : max-content;
+      max-width       : 75%;
+
+      &.received {
+        background-color: var(--bs-light);
+        align-self      : normal;
+        border-radius   : 0 .75em .75em .75em;
+      }
+    }
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .btn {
+    border    : 1px solid var(--bs-gray-400);
+    transition: transform .3s ease-in-out;
+
+    img {
+      width: 20px
+    }
+
+    &:active img {
+      transform: scale(.9, .9);
+    }
+  }
+}

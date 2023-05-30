@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card-header p-3 d-flex align-items-center">
+    <a class="btn" routerLink="/messages"><img src="/assets/icons/back-btn.png"></a>
+    <h4 class="mx-2 mb-0">Secreto SecretosoSecretosoSecretosoSecretosoSecretoso</h4>
+  </div>
+  <div class="card-body d-flex flex-column">
+    <p class="msg received">Esto es un mensaje</p>
+    <p class="msg">Esto es un mensaje mensaje mensaje mensaje</p>
+    <p class="msg received">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad mollitia exercitationem temporibus aspernatur et fuga eius, a velit non atque quo eaque. Praesentium commodi esse, suscipit ipsam tempore repellat numquam.</p>
+    <p class="msg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum sapiente tempore laudantium quam vero delectus. Vero facere ipsum perferendis dolorem temporibus. Natus pariatur facere dignissimos id! Sapiente nesciunt omnis amet ipsum vitae ipsam iure ratione reiciendis facere modi, maiores alias, nihil quos tempora? Cupiditate minima quia voluptas. Tempore, maxime officiis!</p>
+    <p class="msg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum sapiente tempore laudantium quam vero delectus. Vero facere ipsum perferendis dolorem temporibus. Natus pariatur facere dignissimos id! Sapiente nesciunt omnis amet ipsum vitae ipsam iure ratione reiciendis facere modi, maiores alias, nihil quos tempora? Cupiditate minima quia voluptas. Tempore, maxime officiis!</p>
+    <p class="msg">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum sapiente tempore laudantium quam vero delectus. Vero facere ipsum perferendis dolorem temporibus. Natus pariatur facere dignissimos id! Sapiente nesciunt omnis amet ipsum vitae ipsam iure ratione reiciendis facere modi, maiores alias, nihil quos tempora? Cupiditate minima quia voluptas. Tempore, maxime officiis!</p>
+  </div>
+  <form class="card-footer input-group" (submit)="ngSendMsg($event)">
+    <textarea type="text" class="form-control" placeholder="Escribe un mensaje..." (keyup.enter)="ngSendMsg($event)"></textarea>
+    <button class="btn" type="submit"><img src="/assets/icons/send-btn.png"></button>
+  </form>
+</div>
