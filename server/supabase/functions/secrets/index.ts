@@ -17,10 +17,11 @@ interface payload {
   user_id: string;
 }
 
-async function getSecrets() {
-  // Select all the secrets from the database in a range of 1000 by default
-  //const { data: secrets, error } = await supabase.from('secrets').select('*');
-  const { data: secrets, error } = await supabase.from('secrets').select('id, created_at, title, content, status').eq('status', 'CLOSED');
+const pageSize = 10;
+
+async function getSecrets(offset: number) {
+  // The range of secrets is the offset to the offset plus the pageSize minus 1 because is inclusively
+  const { data: secrets, error } = await supabase.from('secrets').select('id, created_at, title, content, media_url, status, user_id').eq('status', 'CLOSED').range(offset, offset + pageSize - 1);
   if (error) throw new Error(`${error.code} ${error.details} ${error.hint} ${error.message}`);
   return secrets;
 }
@@ -33,10 +34,17 @@ async function getSecret(secretId: number) {
 }
 
 const handler = router({
-  'GET@/secrets': async function (_req) {
+  'GET@/secrets': async function (req) {
+
+    const reqUrl = req.url;
+    const reqURLWithParams = new URL(reqUrl);
+    const searchParams =  new URLSearchParams(reqURLWithParams.search);
+
+    // Get the user data from the database
+    const offset = parseInt(searchParams.get('offset') ?? '0');
 
     try {
-      const secrets = await getSecrets();
+      const secrets = await getSecrets(offset);
 
       return new Response(JSON.stringify(secrets), {
         status: 200,
